@@ -8,24 +8,129 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 <style>
-html,body{margin:0;background:#edf0f3}
+html{scroll-behavior:smooth}
+html,body{margin:0;background:#edf0f3;color:#141a26;font-family:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}
+.command{position:relative;overflow:hidden;background:#0b1220;color:#fff;padding:18px 22px 16px;border-bottom:1px solid #273349}
+.command:after{content:"";position:absolute;width:420px;height:420px;border-radius:50%;right:-150px;top:-280px;background:radial-gradient(circle,rgba(74,222,128,.17),transparent 68%);pointer-events:none}
+.command-top{display:flex;align-items:center;gap:18px;position:relative;z-index:1}
+.brand{display:flex;align-items:center;gap:11px;min-width:240px}
+.brand-mark{width:39px;height:39px;display:grid;place-items:center;border-radius:11px;background:linear-gradient(145deg,#ff9933,#fff 48%,#138808);color:#0b1220;font:900 17px "JetBrains Mono",monospace;box-shadow:inset 0 0 0 1px rgba(255,255,255,.5)}
+.brand h1{font:800 19px/1 Inter,sans-serif;margin:0;letter-spacing:-.35px}.brand h1 span{color:#4ade80}.brand small{display:block;color:#91a0b8;margin-top:5px;font-size:10.5px;letter-spacing:.55px;text-transform:uppercase}
+.pulse{display:grid;grid-template-columns:repeat(3,minmax(125px,1fr));gap:7px;flex:1;max-width:610px}
+.pulse-card{border:1px solid #2a3750;background:rgba(18,29,49,.84);border-radius:9px;padding:7px 10px;min-height:51px;transition:border-color .2s,transform .2s}.pulse-card:hover{transform:translateY(-1px);border-color:#465774}
+.pulse-card .k{color:#91a0b8;font-size:9.5px;font-weight:700;letter-spacing:.7px}.pulse-card .v{font:700 14px "JetBrains Mono",monospace;margin-top:3px}.pulse-card .v span{font-size:10.5px;margin-left:5px}.pos{color:#4ade80}.neg{color:#fb7185}
+.session{margin-left:auto;text-align:right;white-space:nowrap}.session .state{display:flex;justify-content:flex-end;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:.45px}.session .state i{width:8px;height:8px;border-radius:50%;background:#94a3b8}.session .state.open i{background:#4ade80;box-shadow:0 0 0 4px rgba(74,222,128,.12);animation:pulse 1.4s infinite}.session .state.pre-open i{background:#fbbf24}.session .clock{font:700 14px "JetBrains Mono",monospace;margin-top:5px}.session small{color:#91a0b8;font-size:9.5px}
+@keyframes pulse{50%{opacity:.35}}
+.command-bottom{display:flex;align-items:center;gap:8px;margin-top:13px;position:relative;z-index:1}.navbtn,.risk-open{border:1px solid #2a3750;background:#121d31;color:#dbe5f4;border-radius:7px;padding:6px 10px;text-decoration:none;font-size:10.5px;font-weight:700;cursor:pointer;transition:.2s}.navbtn:hover,.risk-open:hover{border-color:#4ade80;color:#fff}.risk-open{margin-left:auto;background:linear-gradient(135deg,#1d4ed8,#2563eb);border-color:#3b82f6}.source-note{color:#708198;font-size:9.5px;margin-left:5px}
+.risk-panel{display:none;position:fixed;inset:0;background:rgba(5,10,20,.72);z-index:100;align-items:center;justify-content:center;padding:18px}.risk-panel.on{display:flex}.risk-box{width:min(520px,100%);background:#fff;border-radius:14px;box-shadow:0 24px 80px rgba(0,0,0,.28);overflow:hidden}.risk-head{display:flex;justify-content:space-between;align-items:center;padding:15px 18px;background:#0b1220;color:#fff}.risk-head h2{margin:0;font-size:17px}.risk-head button{background:transparent;color:#fff;border:0;font-size:21px;cursor:pointer}.risk-body{padding:16px 18px 18px}.risk-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field label{display:block;color:#64748b;font-size:10px;font-weight:800;letter-spacing:.45px;text-transform:uppercase;margin-bottom:4px}.field input{width:100%;border:1px solid #d9dee6;border-radius:8px;padding:9px 10px;font:600 13px "JetBrains Mono",monospace;outline:none}.field input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+.risk-result{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:13px}.metric{background:#f4f7fb;border-radius:9px;padding:9px}.metric span{display:block;color:#64748b;font-size:9.5px;font-weight:700;text-transform:uppercase}.metric b{display:block;margin-top:4px;font:800 15px "JetBrains Mono",monospace}.risk-message{margin-top:10px;border-left:3px solid #2563eb;background:#eff6ff;padding:8px 10px;border-radius:5px;font-size:11px;line-height:1.45;color:#334155}.risk-foot{color:#64748b;font-size:9.5px;line-height:1.45;margin-top:10px}
 .section{display:block}
 .divider{height:1px;background:#d9dee6;margin:8px 22px 6px}
 #disc{position:sticky;top:0;z-index:50;background:#fff7e0;border-bottom:1px solid #f1d58a;color:#6b4e00;font:12px Inter,system-ui,sans-serif;padding:7px 22px;text-align:center}
 #boot{font:13px Inter,system-ui,sans-serif;color:#6b7487;padding:40px;text-align:center}
+@media(max-width:900px){.command-top{flex-wrap:wrap}.pulse{order:3;min-width:100%;max-width:none}.session{margin-left:auto}.source-note{display:none}}
+@media(max-width:580px){.command{padding:14px 12px}.brand{min-width:0}.pulse{grid-template-columns:1fr}.pulse-card{min-height:auto}.command-bottom{overflow:auto}.navbtn{white-space:nowrap}.risk-open{white-space:nowrap}.risk-grid{grid-template-columns:1fr 1fr}.risk-result{grid-template-columns:1fr}.session small{display:none}}
 </style>
 </head>
 <body>
 <!-- Each part keeps its own styles and code inside its own shadow root, so the two never clash
      and more parts can be added below the same way. -->
 <div id="disc"><b>Educational software · not investment advice.</b> Everything on this page is computed on your own computer from public data. Patterns and backtests are not recommendations. You are responsible for your own trades.</div>
+<section class="command" aria-label="India market command centre">
+  <div class="command-top">
+    <div class="brand"><div class="brand-mark">₹</div><div><h1>BHARAT <span>MARKET LAB</span></h1><small>NSE · BSE · India-first research</small></div></div>
+    <div class="pulse" id="pulse">
+      <div class="pulse-card" data-index="NIFTY"><div class="k">NIFTY 50</div><div class="v">Loading…</div></div>
+      <div class="pulse-card" data-index="BANKNIFTY"><div class="k">BANK NIFTY</div><div class="v">Loading…</div></div>
+      <div class="pulse-card" data-index="SENSEX"><div class="k">SENSEX</div><div class="v">Loading…</div></div>
+    </div>
+    <div class="session"><div class="state" id="market-state"><i></i><span>CONNECTING</span></div><div class="clock" id="ist-clock">--:--:-- IST</div><small id="market-date">Indian market time</small></div>
+  </div>
+  <div class="command-bottom">
+    <a class="navbtn" href="#smart-host">Smart Money</a><a class="navbtn" href="#sector-host">Sector Map</a><a class="navbtn" href="#lab-host">Swing Lab</a>
+    <span class="source-note">Live public data · calculations stay on this device</span>
+    <button class="risk-open" id="risk-open">₹ Position Size Calculator</button>
+  </div>
+</section>
 <div id="boot">Loading the dashboard…</div>
 <div class="section" id="smart-host"></div>
 <div class="divider"></div>
 <div class="section" id="sector-host"></div>
 <div class="divider"></div>
 <div class="section" id="lab-host"></div>
+<div class="risk-panel" id="risk-panel" role="dialog" aria-modal="true" aria-labelledby="risk-title">
+  <div class="risk-box">
+    <div class="risk-head"><h2 id="risk-title">Position Size Calculator</h2><button id="risk-close" aria-label="Close">×</button></div>
+    <div class="risk-body">
+      <div class="risk-grid">
+        <div class="field"><label for="capital">Trading capital (₹)</label><input id="capital" type="number" min="0" step="1000" value="500000"></div>
+        <div class="field"><label for="risk-pct">Risk per trade (%)</label><input id="risk-pct" type="number" min="0.1" max="5" step="0.1" value="1"></div>
+        <div class="field"><label for="entry">Entry price (₹)</label><input id="entry" type="number" min="0" step="0.05" value="1000"></div>
+        <div class="field"><label for="stop">Stop-loss price (₹)</label><input id="stop" type="number" min="0" step="0.05" value="970"></div>
+      </div>
+      <div class="risk-result"><div class="metric"><span>Quantity</span><b id="qty">166</b></div><div class="metric"><span>Capital used</span><b id="exposure">₹1,66,000</b></div><div class="metric"><span>Max loss</span><b id="max-loss">₹4,980</b></div></div>
+      <div class="risk-message" id="risk-message">Size is limited by your selected account risk.</div>
+      <div class="risk-foot">For cash-equity planning only. Excludes slippage, gap risk, taxes, brokerage and liquidity constraints. Keep actual risk lower where execution is uncertain.</div>
+    </div>
+  </div>
+</div>
 <script>
+const money = new Intl.NumberFormat("en-IN", {maximumFractionDigits: 2});
+const fmtPrice = n => n == null ? "–" : money.format(n);
+
+function updateClock() {
+  const now = new Date();
+  const time = new Intl.DateTimeFormat("en-IN", {timeZone:"Asia/Kolkata",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(now);
+  const date = new Intl.DateTimeFormat("en-IN", {timeZone:"Asia/Kolkata",weekday:"short",day:"2-digit",month:"short",year:"numeric"}).format(now);
+  document.getElementById("ist-clock").textContent = `${time} IST`;
+  document.getElementById("market-date").textContent = date;
+}
+
+function paintMarket(data) {
+  const state = document.getElementById("market-state");
+  const market = data.market || "closed";
+  state.className = `state ${market}`;
+  state.querySelector("span").textContent = market === "open" ? "MARKET OPEN" : market === "pre-open" ? "PRE-OPEN" : "MARKET CLOSED";
+  document.querySelectorAll(".pulse-card").forEach(card => {
+    const row = data.indices?.[card.dataset.index];
+    if (!row) return;
+    const cls = row.pct >= 0 ? "pos" : "neg";
+    const sign = row.pct >= 0 ? "+" : "";
+    card.querySelector(".v").innerHTML = `${fmtPrice(row.ltp)} <span class="${cls}">${sign}${row.pct ?? "–"}%</span>`;
+  });
+}
+
+async function updatePulse() {
+  try { paintMarket(await (await fetch("/api/sm/live?paths=0", {cache:"no-store"})).json()); }
+  catch (_) { document.getElementById("market-state").querySelector("span").textContent = "DATA RETRYING"; }
+}
+
+function calculateRisk() {
+  const capital = Math.max(0, +document.getElementById("capital").value || 0);
+  const riskPct = Math.max(0, +document.getElementById("risk-pct").value || 0);
+  const entry = Math.max(0, +document.getElementById("entry").value || 0);
+  const stop = Math.max(0, +document.getElementById("stop").value || 0);
+  const perShare = Math.abs(entry - stop), budget = capital * riskPct / 100;
+  const byRisk = perShare > 0 ? Math.floor(budget / perShare) : 0;
+  const byCapital = entry > 0 ? Math.floor(capital / entry) : 0;
+  const qty = Math.max(0, Math.min(byRisk, byCapital));
+  const exposure = qty * entry, loss = qty * perShare;
+  document.getElementById("qty").textContent = money.format(qty);
+  document.getElementById("exposure").textContent = `₹${money.format(exposure)}`;
+  document.getElementById("max-loss").textContent = `₹${money.format(loss)}`;
+  const reason = byCapital < byRisk ? "Position is capped by available cash, not the risk budget." : "Position is limited by your selected account risk.";
+  document.getElementById("risk-message").textContent = perShare ? `${reason} Stop distance: ₹${money.format(perShare)} per share.` : "Entry and stop-loss must be different.";
+}
+
+const riskPanel = document.getElementById("risk-panel");
+document.getElementById("risk-open").onclick = () => { riskPanel.classList.add("on"); calculateRisk(); };
+document.getElementById("risk-close").onclick = () => riskPanel.classList.remove("on");
+riskPanel.onclick = event => { if (event.target === riskPanel) riskPanel.classList.remove("on"); };
+document.addEventListener("keydown", event => { if (event.key === "Escape") riskPanel.classList.remove("on"); });
+document.querySelectorAll(".risk-body input").forEach(input => input.addEventListener("input", calculateRisk));
+updateClock(); setInterval(updateClock, 1000); updatePulse(); setInterval(updatePulse, 12000);
+
 async function mount(hostId, url) {
   const html = await (await fetch(url, {cache: "no-store"})).text();
   const doc = new DOMParser().parseFromString(html, "text/html");
